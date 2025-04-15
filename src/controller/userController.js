@@ -1,4 +1,4 @@
-import { createUser } from "../model/userModel.js"
+import { createUser, getUsers } from "../model/userModel.js"
 
 const userController = {
     async registerUser(req, res){
@@ -14,6 +14,11 @@ const userController = {
 
         res.status(200).send({message:"Usuário cadastrado com sucesso"})
 
+    },
+
+    async getUser(req, res){
+        const users = await getUsers()
+        return users
     }
 
 }
