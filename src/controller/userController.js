@@ -1,4 +1,4 @@
-import { createUser, getUsers } from "../model/userModel.js"
+import { createUser, getUsers, login } from "../model/userModel.js"
 
 const userController = {
     async registerUser(req, res){
@@ -19,6 +19,19 @@ const userController = {
     async getUser(req, res){
         const users = await getUsers()
         return users
+    },
+
+    async loginUser(req, res){
+        const {email, password} = req.body
+        const user = await login(email, password)
+
+        if(!user){
+            res.status(403).send("Erro ao tentar logar")
+        }
+
+        res.status(200).send("Usuário logado com sucesso!!")
+
+        
     }
 
 }

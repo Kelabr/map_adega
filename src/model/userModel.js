@@ -1,4 +1,5 @@
 import {prisma} from "../config/db.js"
+import bcrypt from "bcryptjs"
 
 async function createUser(name, email, tel, password){
     const newUser = await prisma.users.create({
@@ -6,7 +7,7 @@ async function createUser(name, email, tel, password){
             name:name,
             email:email,
             tel:tel,
-            password:password
+            password:bcrypt.hashSync(password, 10)
         }
     })
 
@@ -19,5 +20,32 @@ async function getUsers(){
     return Users
 }
 
+async function login(email, password){
+    
+    const user = await prisma.users.findUnique({
+        where: {
+            email: email
+        }
+    })
 
-export {createUser, getUsers}
+    if(!user){
+        console.log("Email não encontrado")
+        return
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password)
+
+    if(!passwordMatch){
+        console.log("Senha incorreta")
+        return
+    }
+
+    return user
+
+
+}
+
+
+
+
+export {createUser, getUsers, login}
