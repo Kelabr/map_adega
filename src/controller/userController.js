@@ -6,6 +6,7 @@ const userController = {
         const {name, email, tel, password} =  req.body
 
         try{
+            await createUser(name, email, tel, password)
             console.log("Usuário registrado com sucesso")
         }catch(error){
             console.error("Erro ao registrar usuário", error)
