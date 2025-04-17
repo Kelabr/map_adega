@@ -7,5 +7,8 @@ import useRouter from "../router/userRouter.js";
 const app = fastify()
 
 app.register(useRouter, {prefix:"api"})
+app.register(jwt, {
+    secret:process.env.KEY_SECRET_JWT
+})
 
 export {app}

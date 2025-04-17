@@ -1,18 +1,20 @@
 import { createUser, getUsers, login } from "../model/userModel.js"
+import { app } from "../config/app.js"
 
 const userController = {
     async registerUser(req, res){
         const {name, email, tel, password} =  req.body
 
         try{
-            await createUser(name, email, tel, password)
             console.log("Usuário registrado com sucesso")
         }catch(error){
             console.error("Erro ao registrar usuário", error)
             return res.status(403).send({messsage:"Erro ao registrar usuário!!"})
         }
 
-        res.status(200).send({message:"Usuário cadastrado com sucesso"})
+        const token = app.jwt.sign({email, name})
+
+        res.status(200).send({message:"Usuário cadastrado com sucesso", token:token})
 
     },
 
@@ -29,7 +31,9 @@ const userController = {
             res.status(403).send("Erro ao tentar logar")
         }
 
-        res.status(200).send("Usuário logado com sucesso!!")
+        const token = app.jwt.sign({email, name:user.name})
+
+        res.status(200).send({message:"Usuário logado com sucesso!!", token:token})
 
         
     }
